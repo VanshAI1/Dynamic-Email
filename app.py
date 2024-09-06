@@ -1,16 +1,13 @@
 import os
 import streamlit as st
 import requests
-import dotenv
-from streamlit_extras.colored_header import colored_header
-# Load environment variables
-dotenv.load_dotenv()
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# Access the API key from Streamlit secrets
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 
 # Check if the API key is set
 if GROQ_API_KEY is None:
-    st.error("GROQ_API_KEY is not set in the .env file")
+    st.error("GROQ_API_KEY is not set in Streamlit secrets")
     st.stop()
 
 # API Configuration
@@ -26,8 +23,8 @@ if "messages" not in st.session_state:
             "You are an AI assistant that generates personalized emails. "
             "To create a highly personalized email, you will ask the user a series of questions one by one to gather the necessary information. "
             "Ask one question at a time, and wait for the user's response before asking the next question. "
-            "Keep the user's answers short (one sentence at most).And try that your questions are not too long just cut to the point. "
-            "you should have enough information, like the necessary user and recipient details, the length of the mail, the tone of the mail, and the purpose of the mail."
+            "Keep the user's answers short (one sentence at most). And try that your questions are not too long just cut to the point. "
+            "You should have enough information, like the necessary user and recipient details, the length of the mail, the tone of the mail, and the purpose of the mail."
             "While you generate the final mail, don't add any other message, make the content ready to copy and paste it directly."
         )}
     ]
@@ -51,7 +48,7 @@ def get_llm_response(messages):
 # Streamlit UI Setup
 st.set_page_config(page_title="Dynamic Personalized Email Generator", page_icon="👾", layout="centered")
 
-colored_header(label="Dynamic Personalized Email Generator", description="Create unique emails with AI assistance", color_name="blue-70")
+st.markdown("<h1 style='text-align: center;'>Dynamic Personalized Email Generator</h1>", unsafe_allow_html=True)
 
 # Add progress bar based on the conversation
 
@@ -98,4 +95,5 @@ st.markdown("<br>", unsafe_allow_html=True)  # Add some space
 if st.button("Start Over"):
     del st.session_state.messages
     st.session_state.email_generated = False
+    st.session_state.progress = 0  # Reset progress
     st.rerun()
