@@ -1,3 +1,4 @@
 streamlit
-groq
-dotenv
+requests
+python-dotenv
+streamlit-extras
